@@ -1,4 +1,4 @@
-package sekury.concurrency;
+package sekury.concurrency.essentials;
 
 public class JavaThreadDeadlockDemo {
 
