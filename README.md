@@ -127,21 +127,22 @@ Each Java objects is associated with a monitor, which a thread can lock (by acqu
 (by releasing monitor's lock). Only one thread can hold a lock. Any other thread trying to lock that monitor
 blocks until it can obtain the lock. When thread exits a critical section, it unlocks the monitor.
 
+When synchronizing on an instance method, the lock is associated with the object, on which the method is called.
+
+When synchronizing on a class method, the lock is associated with the java.lang.Class object.
+
 ```java
 public class JavaThreadSyncDemo {
 
     public static class Counter {
-        private static int counter;    // 0 by default
-        // When synchronizing on an instance method, the lock is associated with the object, on which the method is
-        // called.
+        private static int counter;
         public synchronized int getNext() {
             return ++counter;
         }
     }
 
     public static class StaticCounter {
-        private static int counter;    // 0 by default
-        // When synchronizing on a class method, the lock is associated with the java.lang.Class object.
+        private static int counter;
         public static synchronized int getNext() {
             return ++counter;
         }
@@ -170,10 +171,153 @@ public class JavaThreadSyncDemo {
 }
 ```
 
-[Thread Dead Lock Example](https://gist.github.com/sekury/59a1552026799b96a94c)
+### Thread Dead Lock Example
 
+A liveness failure occurs when an application reaches a state in which it can make no further progress. In a single-
+threaded application, infinite loop would be an example. In a multithreaded application are deadlock, livelock, and
+starvation.
+
+Deadlock: Thread x waits for a resource that thread y is holding exclusively and thread y is waiting for a resource
+that thread x is holding exclusively. Neither thread can make progress.
+
+Livelock: Thread x keeps retrying an operation that will always fail. It cannot make progress for this reason.
+
+Starvation: Thread x is continually denied (by the scheduler) access to a needed resource in order to make progress (indefinite postponement).
+
+```java
+public class JavaThreadDeadlockDemo {
+
+    private final Object lock1 = new Object();
+    private final Object lock2 = new Object();
+
+    public void instanceMethod1() {
+        System.out.println("first holds lock2: " + Thread.holdsLock(lock2));
+        synchronized (lock1) {
+            System.out.println("first thread is trying get lock2");
+            synchronized (lock2) {
+                System.out.println("first thread in instanceMethod1");
+            }
+        }
+    }
+
+    public void instanceMethod2() {
+        System.out.println("second thread is trying get lock2");
+        synchronized (lock2) {
+            System.out.println("second thread is trying get lock1");
+            synchronized (lock1) {
+                System.out.println("second thread in instanceMethod2");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        final JavaThreadDeadlockDemo deadlockDemo = new JavaThreadDeadlockDemo();
+        Thread first = new Thread(() -> {
+            while (true) {
+                deadlockDemo.instanceMethod1();
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {}
+            }
+        });
+        Thread second = new Thread(() -> {
+            while (true) {
+                deadlockDemo.instanceMethod2();
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {}
+            }
+        });
+        first.start();
+        second.start();
+    }
+}
+```
 ## Synchronizers
+### CountDownLatch
 
-[CountDownLatch](https://gist.github.com/sekury/ae435095eb749fcf11d50850d1154405)
+```java
+import java.util.concurrent.*;
 
-[CyclicBarrier](https://gist.github.com/sekury/4ba1b622afb1582750432396f3d61d6f)
+public class CountDownLatchDemo {
+    
+    public static void main(String[] args) {
+        final int numberOfThreads = 3;
+        final CountDownLatch startSignal = new CountDownLatch(1);
+        final CountDownLatch doneSignal = new CountDownLatch(numberOfThreads);
+
+        Runnable runnable = () -> {
+            try {
+                printThreadInfo("entered");
+                startSignal.await();
+                printThreadInfo("in progress...");
+                TimeUnit.MILLISECONDS.sleep((long) (Math.random() * 1000));
+                printThreadInfo("done");
+                doneSignal.countDown();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        };
+
+        ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
+        for (int i = 0; i < numberOfThreads; i++) {
+            executor.execute(runnable);
+        }
+
+        try {
+            printThreadInfo("main thread");
+            TimeUnit.SECONDS.sleep(1);
+            startSignal.countDown();
+            printThreadInfo("signal start");
+            doneSignal.await();
+            executor.shutdown();
+            printThreadInfo("all threads done");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    static void printThreadInfo(String msg) {
+        System.out.println(System.currentTimeMillis() + ": " + Thread.currentThread() + ": " + msg);
+    }
+}
+```
+
+### CyclicBarrier
+
+```java
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.TimeUnit;
+
+public class CyclicBarrierDemo {
+
+    public static void main(String[] args) {
+        final int parties = 5;
+        CyclicBarrier barrier = new CyclicBarrier(parties,
+                () -> System.out.println(Thread.currentThread().getName() + ": All threads are done!"));
+
+        Runnable worker = () -> {
+            System.out.println(Thread.currentThread().getName() + ": Works.");
+            try {
+                TimeUnit.MILLISECONDS.sleep((long)(Math.random() * 1000));
+                barrier.await();
+            } catch (InterruptedException | BrokenBarrierException e) {
+                e.printStackTrace();
+            }
+            System.out.println(Thread.currentThread().getName() + ": Done.");
+        };
+
+        for (int n = 0; n < 2; n++) {
+            Thread[] threads = new Thread[parties];
+            for(int i = 0; i < parties; i++) {
+                threads[i] = new Thread(worker);
+            }
+            for (Thread thread : threads) {
+                thread.start();
+            }
+        }
+    }
+}
+```
