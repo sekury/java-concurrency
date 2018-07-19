@@ -89,3 +89,11 @@ Starvation: Thread x is continually denied (by the scheduler) access to a needed
 ### Exchanger
 
 [Example](/src/sekury/concurrency/synchronizers/ExchangerDemo.java)
+
+### Semaphore
+
+Semaphore restricts the number of threads that can access resource.
+A thread attempting to acquire a semaphore permit.
+When no permits are available thread blocks until some other thread releases a permit.
+
+[Example](/src/sekury/concurrency/synchronizers/SemaphoreDemo.java)
