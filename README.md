@@ -1,4 +1,4 @@
-# Java Concurrency Gists
+# Java Concurrency Tips
 
 ## Essentials
 
