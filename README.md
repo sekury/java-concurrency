@@ -97,3 +97,10 @@ A thread attempting to acquire a semaphore permit.
 When no permits are available thread blocks until some other thread releases a permit.
 
 [Example](/src/sekury/concurrency/synchronizers/SemaphoreDemo.java)
+
+### Phaser
+
+Phaser coordinates a variable number of threads, which can register at any time.
+Phaser lets group of threads wait on a barrier.
+
+[Example](/src/sekury/concurrency/synchronizers/PhaserDemo.java)
