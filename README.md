@@ -80,13 +80,19 @@ Starvation: Thread x is continually denied (by the scheduler) access to a needed
 
 ### CountDownLatch
 
+CountDownLatch causes one or more threads to wait at a gate until another thread opens this gate. 
+
 [Example](/src/sekury/concurrency/synchronizers/CountDownLatchDemo.java)
 
 ### CyclicBarrier
 
+CyclicBarrier lets a set of threads wait for each other to reach a common barrier point.
+
 [Example](/src/sekury/concurrency/synchronizers/CyclicBarrierDemo.java)
 
 ### Exchanger
+
+Exchanger provides a synchronization point where threads can swap objects.
 
 [Example](/src/sekury/concurrency/synchronizers/ExchangerDemo.java)
 
@@ -101,6 +107,6 @@ When no permits are available thread blocks until some other thread releases a p
 ### Phaser
 
 Phaser coordinates a variable number of threads, which can register at any time.
-Phaser lets group of threads wait on a barrier.
+Phaser lets a group of threads wait on a barrier.
 
 [Example](/src/sekury/concurrency/synchronizers/PhaserDemo.java)
