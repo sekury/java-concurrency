@@ -89,6 +89,12 @@ Starvation: Thread x is continually denied (by the scheduler) access to a needed
 
 [Example](/src/sekury/concurrency/essentials/JavaThreadDeadlockDemo.java)
 
+## Executors
+
+Executor decouples task submission from task execution mechanics.
+
+[Example](/src/sekury/concurrency/executors/ExecutorDemo.java)
+
 ## Synchronizers
 
 ### CountDownLatch
