@@ -92,7 +92,12 @@ Starvation: Thread x is continually denied (by the scheduler) access to a needed
 
 ## Executors
 
-Executor decouples task submission from task execution mechanics.
+`Executor` interface decouples task submission from task execution mechanics.
+`Executor` focuses exclusively on `Runnable`.
+
+`ExecutorService` interface submits a `Callable` for execution and return `Future` interface that represents the 
+result of async computation. `ExecutorService` provides methods to execute a collection of tasks and initiate a 
+shutdown.
 
 [Example](/src/sekury/concurrency/executors/ExecutorDemo.java)
 

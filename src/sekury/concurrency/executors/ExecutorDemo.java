@@ -28,6 +28,9 @@ public class ExecutorDemo {
 
         ExecutorService callableExecutor = Executors.newFixedThreadPool(1);
         Future<String> task = callableExecutor.submit(() -> "Hello future!");
+        while (!task.isDone()) {
+            System.out.println("Waiting...");
+        }
         try {
             String msg = task.get();
             System.out.println(msg);
