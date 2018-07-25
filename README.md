@@ -13,6 +13,10 @@
     * [Exchanger](#exchanger)
     * [Semaphore](#semaphore)
     * [Phaser](#phaser)
+* [Locking Framework](#locking-framework)
+    * [Lock](#lock)
+    * [ReentrantLock](#reentrantlock)
+    * [Condition](#condition)
 
 ## Essentials
 
@@ -135,3 +139,28 @@ Phaser coordinates a variable number of threads, which can register at any time.
 Phaser lets a group of threads wait on a barrier.
 
 [Example](/src/sekury/concurrency/synchronizers/PhaserDemo.java)
+
+## Locking Framework
+
+Locking Framework improves on intrinsic synchronization and wait/notification by offering lock polling, timed waits, 
+etc.
+
+### Lock
+
+`Lock` interface offers more extensive locking operations than can be obtained via the lock associated with monitors.
+`Lock` replaces `synchronized` methods and blocks
+
+### ReentrantLock
+
+`ReentrantLock` describes a reentrant mutual exclusion lock. 
+This lock is associated with a count. 
+When a thread acquires lock, the count is increased by 1.
+When the lock is released, the count is decremented by 1.
+The lock is released when count reaches 0.
+
+[Example](/src/sekury/concurrency/locks/ReentrantLockDemo.java)
+
+### Condition
+
+`Condition` replaces Object’s wait/notification methods.
+`Condition` bound to `Lock`.
