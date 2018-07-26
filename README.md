@@ -164,3 +164,5 @@ The lock is released when count reaches 0.
 
 `Condition` replaces Object’s wait/notification methods.
 `Condition` bound to `Lock`.
+
+[Example](/src/sekury/concurrency/locks/ConditionDemo.java)
