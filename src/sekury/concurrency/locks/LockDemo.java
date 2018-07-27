@@ -5,7 +5,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class ReentrantLockDemo {
+public class LockDemo {
     public static void main(String[] args) {
         ExecutorService executor = Executors.newFixedThreadPool(2);
         final ReentrantLock lock = new ReentrantLock();

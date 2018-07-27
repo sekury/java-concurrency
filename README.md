@@ -17,6 +17,7 @@
     * [Lock](#lock)
     * [ReentrantLock](#reentrantlock)
     * [Condition](#condition)
+    * [ReadWriteLock](#readwritelock)
 
 ## Essentials
 
@@ -158,7 +159,7 @@ When a thread acquires lock, the count is increased by 1.
 When the lock is released, the count is decremented by 1.
 The lock is released when count reaches 0.
 
-[Example](/src/sekury/concurrency/locks/ReentrantLockDemo.java)
+[Example](/src/sekury/concurrency/locks/LockDemo.java)
 
 ### Condition
 
@@ -166,3 +167,10 @@ The lock is released when count reaches 0.
 `Condition` bound to `Lock`.
 
 [Example](/src/sekury/concurrency/locks/ConditionDemo.java)
+
+### ReadWriteLock
+
+`ReadWriteLock` maintains a pair of locks. The read lock may be held by multiple threads. The write lock is exclusive.
+`ReadWriteLock` is implemented by `ReentrantReadWriteLock`.
+
+[Example](/src/sekury/concurrency/locks/ReadWriteLockDemo.java)
